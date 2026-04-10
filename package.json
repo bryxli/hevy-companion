@@ -10,11 +10,13 @@
     "dev": "sst dev",
     "deploy": "sst deploy",
     "remove": "sst remove",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest run --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/aws-lambda": "8.10.161",
+    "@vitest/coverage-v8": "^4.1.4",
     "eslint": "^10.2.0",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
