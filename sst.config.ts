@@ -9,5 +9,14 @@ export default $config({
       home: "aws",
     };
   },
-  async run() {},
+  async run() {
+    const api = new sst.aws.Function("HevyTrpcApi", {
+      handler: "packages/functions/src/api.handler",
+      url: true,
+    });
+
+    return {
+      apiUrl: api.url,
+    };
+  },
 });
