@@ -2,5 +2,11 @@
   "name": "@hevy-companion/functions",
   "private": true,
   "version": "0.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@trpc/server": "^11.16.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161"
+  }
 }

@@ -3,7 +3,15 @@ import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default tseslint.config(
-  { ignores: ["dist", ".sst", "node_modules", "packages/frontend/**"] },
+  {
+    ignores: [
+      "dist",
+      ".sst",
+      "node_modules",
+      "sst-env.d.ts",
+      "packages/frontend/**",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
