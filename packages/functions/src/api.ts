@@ -2,12 +2,13 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { awsLambdaRequestHandler } from "@trpc/server/adapters/aws-lambda";
 import type { CreateAWSLambdaContextOptions } from "@trpc/server/adapters/aws-lambda";
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
+import { fetchUserInfo } from "@hevy-companion/core";
 
 export function createContext({
   event,
 }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>) {
   const authHeader = event.headers.authorization;
-  const apiKey = authHeader?.split(" ")[1] || event.headers["x-api-key"];
+  const apiKey = authHeader?.split(" ")[1] || event.headers["api-key"];
 
   return { apiKey };
 }
@@ -43,12 +44,21 @@ const appRouter = t.router({
   health: t.procedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
   }),
-  testAuth: protectedProcedure.query(({ ctx }) => {
-    const maskedKey = ctx.apiKey.slice(0, 4) + "..." + ctx.apiKey.slice(-4);
-    return {
-      message: "Authentication successful!",
-      receivedKey: maskedKey,
-    };
+  user: t.router({
+    info: protectedProcedure.query(async ({ ctx }) => {
+      try {
+        const userData = await fetchUserInfo(ctx.apiKey);
+        return userData;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: errorMessage,
+        });
+      }
+    }),
   }),
 });
 
