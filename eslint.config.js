@@ -8,14 +8,14 @@ export default tseslint.config(
       "dist",
       ".sst",
       "node_modules",
-      "sst-env.d.ts",
+      "**/sst-env.d.ts",
       "packages/frontend/**",
     ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["*.{ts,js}"],
+    files: ["**/*.{ts,js}"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
