@@ -5,9 +5,9 @@ import globals from "globals";
 export default tseslint.config(
   {
     ignores: [
-      "dist",
-      ".sst",
-      "node_modules",
+      "**/dist/**",
+      "**/.sst/**",
+      "**/node_modules/**",
       "**/sst-env.d.ts",
       "packages/frontend/**",
     ],
