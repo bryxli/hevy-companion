@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - run: npm install --ignore-scripts
       # - run: npm run build
-      # - run: npm run test
+      - run: npm run test
       - uses: SonarSource/sonarqube-scan-action@299e4b793aaa83bf2aba7c9c14bedbb485688ec4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
