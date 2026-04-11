@@ -2,5 +2,15 @@
   "name": "@hevy-companion/functions",
   "private": true,
   "version": "0.0.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@hevy-companion/core": "*",
+    "@trpc/server": "^11.16.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161"
+  }
 }

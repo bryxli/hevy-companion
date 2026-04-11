@@ -1,0 +1,74 @@
+{
+  "info": {
+    "_postman_id": "cbd5dfc0-389f-4e15-8ef8-01edf86da105",
+    "name": "hevy-companion",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36916822"
+  },
+  "item": [
+    {
+      "name": "health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api_url}}/health",
+          "host": ["{{api_url}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user.info",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api-key",
+            "value": "{{hevy_api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user.info",
+          "host": ["{{api_url}}"],
+          "path": ["user.info"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user.info 401",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api_url}}/user.info",
+          "host": ["{{api_url}}"],
+          "path": ["user.info"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user.info 500",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api-key",
+            "value": "test-key-123456789",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user.info",
+          "host": ["{{api_url}}"],
+          "path": ["user.info"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
