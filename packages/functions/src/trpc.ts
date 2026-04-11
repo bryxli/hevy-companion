@@ -39,3 +39,4 @@ const isAuthed = t.middleware(({ next, ctx }) => {
 export const router = t.router;
 export const procedure = t.procedure;
 export const hevyProcedure = t.procedure.use(isAuthed);
+export const tInstance = t;
