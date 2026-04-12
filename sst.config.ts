@@ -15,8 +15,20 @@ export default $config({
       url: true,
     });
 
+    const frontend = new sst.aws.StaticSite("HevyFrontend", {
+      path: "packages/frontend",
+      build: {
+        command: "npm run build",
+        output: "dist",
+      },
+      environment: {
+        VITE_API_URL: api.url,
+      },
+    });
+
     return {
       apiUrl: api.url,
+      frontendUrl: frontend.url,
     };
   },
 });
