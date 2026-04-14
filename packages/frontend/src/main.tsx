@@ -17,7 +17,7 @@ function Root() {
           url: import.meta.env.VITE_API_URL,
           headers() {
             const apiKey = localStorage.getItem("hevy-api-key");
-            return apiKey ? { "x-api-key": apiKey } : {};
+            return apiKey ? { "api-key": apiKey } : {};
           },
         }),
       ],

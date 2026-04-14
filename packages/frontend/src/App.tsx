@@ -6,7 +6,9 @@ function App() {
 
   const [apiKeyInput, setApiKeyInput] = useState("");
 
-  const healthQuery = trpc.health.useQuery();
+  const userQuery = trpc.user.info.useQuery(undefined, {
+    enabled: !!apiKey,
+  });
 
   const handleSaveApiKey = () => {
     if (!apiKeyInput) return;
@@ -64,29 +66,29 @@ function App() {
       </div>
 
       <h3 className="text-lg font-semibold text-gray-800 mb-4">
-        Backend Connection Test
+        Hevy Profile Info
       </h3>
 
-      {healthQuery.isLoading && (
+      {userQuery.isLoading && (
         <p className="text-gray-500 animate-pulse">
-          Sending request to backend...
+          Fetching profile from Hevy...
         </p>
       )}
 
-      {healthQuery.isError && (
+      {userQuery.isError && (
         <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-          Error: {healthQuery.error.message}
+          Error: {userQuery.error.message}
         </div>
       )}
 
-      {healthQuery.data && (
+      {userQuery.data && (
         <div className="bg-gray-100 p-4 md:p-6 rounded-lg border border-gray-200 shadow-inner overflow-x-auto">
           <p className="text-green-600 font-bold mb-2 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            Connected
+            Connected Successfully
           </p>
           <pre className="text-sm text-gray-700 m-0">
-            {JSON.stringify(healthQuery.data, null, 2)}
+            {JSON.stringify(userQuery.data, null, 2)}
           </pre>
         </div>
       )}
