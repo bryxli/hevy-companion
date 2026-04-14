@@ -6,7 +6,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "lcov"],
       include: ["packages/*/src/**/*.{ts,tsx,js,jsx}"],
-      exclude: ["packages/core/src/index.ts", "packages/core/src/schemas.ts"],
+      exclude: [
+        "packages/core/src/index.ts",
+        "packages/core/src/schemas.ts",
+        "packages/frontend/src/sst-env.d.ts",
+        "packages/frontend/src/trpc.ts",
+      ],
     },
   },
 });

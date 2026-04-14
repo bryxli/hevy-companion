@@ -6,6 +6,10 @@
 
 declare module "sst" {
   export interface Resource {
+    HevyFrontend: {
+      type: "sst.aws.StaticSite";
+      url: string;
+    };
     HevyTrpcApi: {
       name: string;
       type: "sst.aws.Function";
