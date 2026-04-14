@@ -21,97 +21,71 @@ function App() {
 
   if (!apiKey) {
     return (
-      <div
-        style={{ padding: "2rem", maxWidth: "400px", fontFamily: "sans-serif" }}
-      >
-        <h1>🏋️ Hevy Companion</h1>
-        <p>Please enter your Hevy Developer API Key to continue:</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            🏋️ Hevy Companion
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Please enter your Hevy Developer API Key to continue:
+          </p>
 
-        <input
-          type="password"
-          placeholder="Enter API Key..."
-          value={apiKeyInput}
-          onChange={(e) => setApiKeyInput(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "8px",
-            marginBottom: "1rem",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
+          <input
+            type="password"
+            placeholder="Enter API Key..."
+            value={apiKeyInput}
+            onChange={(e) => setApiKeyInput(e.target.value)}
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-        <button
-          onClick={handleSaveApiKey}
-          style={{
-            padding: "8px 16px",
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Save Key
-        </button>
+          <button
+            onClick={handleSaveApiKey}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+          >
+            Save Key
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottom: "1px solid #eee",
-          paddingBottom: "1rem",
-          marginBottom: "2rem",
-        }}
-      >
-        <h1 style={{ margin: 0 }}>🏋️ Hevy Companion</h1>
+    <div className="w-full max-w-3xl mx-auto p-4 md:p-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-200 pb-4 mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 m-0">
+          🏋️ Hevy Companion
+        </h1>
         <button
           onClick={handleDisconnect}
-          style={{
-            padding: "6px 12px",
-            background: "transparent",
-            color: "#dc2626",
-            border: "1px solid #dc2626",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
+          className="px-4 py-2 text-sm font-medium text-red-600 border border-red-200 hover:bg-red-50 rounded-lg transition-colors"
         >
           Disconnect Key
         </button>
       </div>
 
-      <h3>Backend Connection Test</h3>
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        Backend Connection Test
+      </h3>
 
-      {healthQuery.isLoading && <p>Sending request to backend...</p>}
+      {healthQuery.isLoading && (
+        <p className="text-gray-500 animate-pulse">
+          Sending request to backend...
+        </p>
+      )}
 
       {healthQuery.isError && (
-        <p style={{ color: "#dc2626" }}>Error: {healthQuery.error.message}</p>
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+          Error: {healthQuery.error.message}
+        </div>
       )}
 
       {healthQuery.data && (
-        <div
-          style={{
-            background: "#f3f4f6",
-            padding: "1rem",
-            borderRadius: "8px",
-          }}
-        >
-          <p
-            style={{
-              margin: "0 0 8px 0",
-              color: "#16a34a",
-              fontWeight: "bold",
-            }}
-          >
-            ✅ Connected
+        <div className="bg-gray-100 p-4 md:p-6 rounded-lg border border-gray-200 shadow-inner overflow-x-auto">
+          <p className="text-green-600 font-bold mb-2 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500"></span>
+            Connected
           </p>
-          <pre style={{ margin: 0 }}>
+          <pre className="text-sm text-gray-700 m-0">
             {JSON.stringify(healthQuery.data, null, 2)}
           </pre>
         </div>
