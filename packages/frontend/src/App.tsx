@@ -13,12 +13,12 @@ function App() {
   const handleSaveApiKey = () => {
     if (!apiKeyInput) return;
     localStorage.setItem("hevy-api-key", apiKeyInput);
-    window.location.reload();
+    globalThis.location.reload();
   };
 
   const handleDisconnect = () => {
     localStorage.removeItem("hevy-api-key");
-    window.location.reload();
+    globalThis.location.reload();
   };
 
   if (!apiKey) {
@@ -84,8 +84,8 @@ function App() {
       {userQuery.data && (
         <div className="bg-gray-100 p-4 md:p-6 rounded-lg border border-gray-200 shadow-inner overflow-x-auto">
           <p className="text-green-600 font-bold mb-2 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            Connected Successfully
+            <span className="w-2 h-2 rounded-full bg-green-500" />
+            <span>Connected Successfully</span>
           </p>
           <pre className="text-sm text-gray-700 m-0">
             {JSON.stringify(userQuery.data, null, 2)}
