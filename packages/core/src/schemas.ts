@@ -9,12 +9,12 @@ export const HevyUserInfo = z.object({
 export const HevySet = z.object({
   index: z.number(),
   type: z.string(),
-  weight_kg: z.number().nullable(),
-  reps: z.number().nullable(),
-  distance_meters: z.number().nullable(),
-  duration_seconds: z.number().nullable(),
-  rpe: z.number().nullable(),
-  custom_metrics: z.number().nullable(),
+  weight_kg: z.number().nullish(),
+  reps: z.number().nullish(),
+  distance_meters: z.number().nullish(),
+  duration_seconds: z.number().nullish(),
+  rpe: z.number().nullish(),
+  custom_metrics: z.number().nullish(),
 });
 
 export const HevyExercise = z.object({
@@ -22,7 +22,7 @@ export const HevyExercise = z.object({
   title: z.string(),
   notes: z.string(),
   exercise_template_id: z.string(),
-  supersets_id: z.number().nullable(),
+  supersets_id: z.number().nullish(),
   sets: z.array(HevySet),
 });
 
@@ -46,3 +46,9 @@ export const HevyWorkoutHistoryResponse = z.object({
   page_count: z.number(),
   workouts: z.array(HevyWorkout),
 });
+
+export const WorkoutHistoryInputSchema = z
+  .object({
+    limit: z.number().min(1).max(10).default(1),
+  })
+  .optional();
