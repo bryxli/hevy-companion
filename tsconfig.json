@@ -1,4 +1,16 @@
 {
-  "files": [],
-  "references": [{ "path": "./packages/frontend" }]
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "packages/core/src/**/*",
+    "packages/functions/src/**/*",
+    "packages/frontend/src/**/*",
+    "packages/frontend/test/**/*"
+  ]
 }
