@@ -3,6 +3,7 @@ import "./setupTests";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { useAuthStore } from "../src/store/useAuthStore";
 
 vi.mock("../src/App.tsx", () => ({
   default: () => <div data-testid="mock-app">Mock App</div>,
@@ -32,7 +33,7 @@ describe("main.tsx (Application Entry Point)", () => {
 
     document.body.innerHTML = '<div id="root"></div>';
 
-    localStorage.clear();
+    useAuthStore.setState({ apiKey: null });
     vi.stubEnv("VITE_API_URL", "https://test.api.com/trpc");
   });
 
@@ -50,8 +51,8 @@ describe("main.tsx (Application Entry Point)", () => {
     });
   });
 
-  it("configures tRPC with the correct API URL and attaches the API key from localStorage", async () => {
-    localStorage.setItem("hevy-api-key", "my-secret-key-123");
+  it("configures tRPC with the correct API URL and attaches the API key from the store", async () => {
+    useAuthStore.setState({ apiKey: "my-secret-key-123" });
 
     await import("../src/main");
 
@@ -75,7 +76,7 @@ describe("main.tsx (Application Entry Point)", () => {
     expect(headers).toEqual({ "api-key": "my-secret-key-123" });
   });
 
-  it("returns an empty headers object if no API key is in localStorage", async () => {
+  it("returns an empty headers object if no API key is in the store", async () => {
     await import("../src/main");
 
     await waitFor(() => {
