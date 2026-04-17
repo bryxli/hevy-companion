@@ -6,6 +6,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 import App from "../src/App";
 import { trpc } from "../src/trpc";
+import { useAuthStore } from "../src/store/useAuthStore";
 
 vi.mock("../src/trpc", () => ({
   trpc: {
@@ -18,15 +19,8 @@ vi.mock("../src/trpc", () => ({
 }));
 
 describe("App Component", () => {
-  const originalLocation = window.location;
-
   beforeEach(() => {
-    localStorage.clear();
-
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: { reload: vi.fn() },
-    });
+    useAuthStore.setState({ apiKey: null });
 
     vi.mocked(trpc.user.info.useQuery).mockReturnValue({
       isLoading: false,
@@ -36,10 +30,6 @@ describe("App Component", () => {
   });
 
   afterEach(() => {
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: originalLocation,
-    });
     vi.clearAllMocks();
   });
 
@@ -55,7 +45,7 @@ describe("App Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("saves the API key to localStorage and reloads the page", async () => {
+  it("saves the API key to the store and renders dashboard", async () => {
     const user = userEvent.setup();
     render(<App />);
 
@@ -65,12 +55,11 @@ describe("App Component", () => {
     await user.type(input, "test-api-key-123");
     await user.click(saveButton);
 
-    expect(localStorage.getItem("hevy-api-key")).toBe("test-api-key-123");
-    expect(window.location.reload).toHaveBeenCalledOnce();
+    expect(useAuthStore.getState().apiKey).toBe("test-api-key-123");
   });
 
-  it("renders the dashboard when an API key exists in localStorage", () => {
-    localStorage.setItem("hevy-api-key", "existing-key");
+  it("renders the dashboard when an API key exists in the store", () => {
+    useAuthStore.setState({ apiKey: "existing-key" });
     render(<App />);
 
     expect(screen.getByText("Hevy Profile Info")).toBeInTheDocument();
@@ -79,9 +68,9 @@ describe("App Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("removes the API key and reloads when disconnect is clicked", async () => {
+  it("removes the API key when disconnect is clicked", async () => {
     const user = userEvent.setup();
-    localStorage.setItem("hevy-api-key", "existing-key");
+    useAuthStore.setState({ apiKey: "existing-key" });
     render(<App />);
 
     const disconnectButton = screen.getByRole("button", {
@@ -89,23 +78,21 @@ describe("App Component", () => {
     });
     await user.click(disconnectButton);
 
-    expect(localStorage.getItem("hevy-api-key")).toBeNull();
-    expect(window.location.reload).toHaveBeenCalledOnce();
+    expect(useAuthStore.getState().apiKey).toBeNull();
   });
 
-  it("does not save or reload if the input is empty", async () => {
+  it("does not save if the input is empty", async () => {
     const user = userEvent.setup();
     render(<App />);
 
     const saveButton = screen.getByRole("button", { name: "Save Key" });
     await user.click(saveButton);
 
-    expect(localStorage.getItem("hevy-api-key")).toBeNull();
-    expect(globalThis.location.reload).not.toHaveBeenCalled();
+    expect(useAuthStore.getState().apiKey).toBeNull();
   });
 
   it("displays loading state when fetching profile", () => {
-    localStorage.setItem("hevy-api-key", "existing-key");
+    useAuthStore.setState({ apiKey: "existing-key" });
 
     vi.mocked(trpc.user.info.useQuery).mockReturnValue({
       isLoading: true,
@@ -120,7 +107,7 @@ describe("App Component", () => {
   });
 
   it("displays error state when the query fails", () => {
-    localStorage.setItem("hevy-api-key", "existing-key");
+    useAuthStore.setState({ apiKey: "existing-key" });
 
     vi.mocked(trpc.user.info.useQuery).mockReturnValue({
       isLoading: false,
@@ -136,7 +123,7 @@ describe("App Component", () => {
   });
 
   it("displays profile data when connection is successful", () => {
-    localStorage.setItem("hevy-api-key", "existing-key");
+    useAuthStore.setState({ apiKey: "existing-key" });
 
     const mockUserData = { username: "bryxli" };
     vi.mocked(trpc.user.info.useQuery).mockReturnValue({
@@ -148,7 +135,6 @@ describe("App Component", () => {
     render(<App />);
 
     expect(screen.getByText("Connected Successfully")).toBeInTheDocument();
-
     expect(screen.getByText(new RegExp("bryxli"))).toBeInTheDocument();
   });
 });
