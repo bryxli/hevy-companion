@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "./trpc";
+import { useAuthStore } from "./store/useAuthStore";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -16,7 +17,7 @@ function Root() {
         httpBatchLink({
           url: import.meta.env.VITE_API_URL,
           headers() {
-            const apiKey = localStorage.getItem("hevy-api-key");
+            const apiKey = useAuthStore.getState().apiKey;
             return apiKey ? { "api-key": apiKey } : {};
           },
         }),

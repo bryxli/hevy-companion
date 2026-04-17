@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { trpc } from "./trpc";
+import { useAuthStore } from "./store/useAuthStore";
 
 function App() {
-  const apiKey = localStorage.getItem("hevy-api-key");
+  const { apiKey, setApiKey, clearApiKey } = useAuthStore();
 
   const [apiKeyInput, setApiKeyInput] = useState("");
 
@@ -12,13 +13,12 @@ function App() {
 
   const handleSaveApiKey = () => {
     if (!apiKeyInput) return;
-    localStorage.setItem("hevy-api-key", apiKeyInput);
-    globalThis.location.reload();
+    setApiKey(apiKeyInput);
   };
 
   const handleDisconnect = () => {
-    localStorage.removeItem("hevy-api-key");
-    globalThis.location.reload();
+    clearApiKey();
+    setApiKeyInput("");
   };
 
   if (!apiKey) {
