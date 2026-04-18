@@ -9,7 +9,9 @@
   },
   "include": [
     "packages/core/src/**/*",
+    "packages/core/test/**/*",
     "packages/functions/src/**/*",
+    "packages/functions/test/**/*",
     "packages/frontend/src/**/*",
     "packages/frontend/test/**/*"
   ]
