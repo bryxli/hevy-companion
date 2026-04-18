@@ -69,6 +69,50 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "workouts.history",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api-key",
+            "value": "{{hevy_api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/workouts.history",
+          "host": ["{{api_url}}"],
+          "path": ["workouts.history"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "workouts.history limit",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api-key",
+            "value": "{{hevy_api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/workouts.history?input=%7B%22limit%22%3A10%7D",
+          "host": ["{{api_url}}"],
+          "path": ["workouts.history"],
+          "query": [
+            {
+              "key": "input",
+              "value": "%7B%22limit%22%3A10%7D"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
