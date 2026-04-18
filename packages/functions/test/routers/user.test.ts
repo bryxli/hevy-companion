@@ -4,10 +4,13 @@ import { fetchUserInfo } from "@hevy-companion/core";
 import { appRouter } from "../../src/api";
 import { tInstance } from "../../src/trpc";
 
-vi.mock("@hevy-companion/core", () => ({
-  fetchUserInfo: vi.fn(),
-}));
-
+vi.mock("@hevy-companion/core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@hevy-companion/core")>();
+  return {
+    ...actual,
+    fetchUserInfo: vi.fn(),
+  };
+});
 describe("User Router", () => {
   const createCaller = tInstance.createCallerFactory(appRouter);
 
@@ -25,7 +28,6 @@ describe("User Router", () => {
     });
 
     const caller = createCaller({ apiKey: "valid-test-key" });
-
     const result = await caller.user.info();
 
     expect(fetchUserInfo).toHaveBeenCalledWith("valid-test-key");

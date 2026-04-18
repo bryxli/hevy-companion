@@ -51,4 +51,4 @@ export const WorkoutHistoryInputSchema = z
   .object({
     limit: z.number().min(1).max(10).default(1),
   })
-  .optional();
+  .default({ limit: 1 });
