@@ -1,140 +1,46 @@
 // @vitest-environment jsdom
 import "./setupTests";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "../src/App";
-import { trpc } from "../src/trpc";
 import { useAuthStore } from "../src/store/useAuthStore";
 
-vi.mock("../src/trpc", () => ({
-  trpc: {
-    user: {
-      info: {
-        useQuery: vi.fn(),
-      },
-    },
-  },
+vi.mock("../src/components/ApiKeyForm", () => ({
+  ApiKeyForm: () => <div data-testid="api-key-form">Mock Api Key Form</div>,
+}));
+vi.mock("../src/components/Header", () => ({
+  Header: () => <div data-testid="header">Mock Header</div>,
+}));
+vi.mock("../src/components/UserProfile", () => ({
+  UserProfile: () => <div data-testid="user-profile">Mock User Profile</div>,
+}));
+vi.mock("../src/components/WorkoutHistory", () => ({
+  WorkoutHistory: () => (
+    <div data-testid="workout-history">Mock Workout History</div>
+  ),
 }));
 
 describe("App Component", () => {
   beforeEach(() => {
     useAuthStore.setState({ apiKey: null });
-
-    vi.mocked(trpc.user.info.useQuery).mockReturnValue({
-      isLoading: false,
-      isError: false,
-      data: undefined,
-    } as unknown as ReturnType<typeof trpc.user.info.useQuery>);
-  });
-
-  afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders the login screen when no API key is present", () => {
+  it("renders the ApiKeyForm when no API key is present in the store", () => {
     render(<App />);
 
-    expect(
-      screen.getByText("Please enter your Hevy Developer API Key to continue:"),
-    ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Enter API Key...")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Save Key" }),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("api-key-form")).toBeInTheDocument();
+    expect(screen.queryByTestId("header")).not.toBeInTheDocument();
   });
 
-  it("saves the API key to the store and renders dashboard", async () => {
-    const user = userEvent.setup();
+  it("renders the Header, UserProfile, and WorkoutHistory when API key exists", () => {
+    useAuthStore.setState({ apiKey: "valid-key" });
     render(<App />);
 
-    const input = screen.getByPlaceholderText("Enter API Key...");
-    const saveButton = screen.getByRole("button", { name: "Save Key" });
+    expect(screen.queryByTestId("api-key-form")).not.toBeInTheDocument();
 
-    await user.type(input, "test-api-key-123");
-    await user.click(saveButton);
-
-    expect(useAuthStore.getState().apiKey).toBe("test-api-key-123");
-  });
-
-  it("renders the dashboard when an API key exists in the store", () => {
-    useAuthStore.setState({ apiKey: "existing-key" });
-    render(<App />);
-
-    expect(screen.getByText("Hevy Profile Info")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Disconnect Key" }),
-    ).toBeInTheDocument();
-  });
-
-  it("removes the API key when disconnect is clicked", async () => {
-    const user = userEvent.setup();
-    useAuthStore.setState({ apiKey: "existing-key" });
-    render(<App />);
-
-    const disconnectButton = screen.getByRole("button", {
-      name: "Disconnect Key",
-    });
-    await user.click(disconnectButton);
-
-    expect(useAuthStore.getState().apiKey).toBeNull();
-  });
-
-  it("does not save if the input is empty", async () => {
-    const user = userEvent.setup();
-    render(<App />);
-
-    const saveButton = screen.getByRole("button", { name: "Save Key" });
-    await user.click(saveButton);
-
-    expect(useAuthStore.getState().apiKey).toBeNull();
-  });
-
-  it("displays loading state when fetching profile", () => {
-    useAuthStore.setState({ apiKey: "existing-key" });
-
-    vi.mocked(trpc.user.info.useQuery).mockReturnValue({
-      isLoading: true,
-      isError: false,
-      data: undefined,
-    } as unknown as ReturnType<typeof trpc.user.info.useQuery>);
-
-    render(<App />);
-    expect(
-      screen.getByText("Fetching profile from Hevy..."),
-    ).toBeInTheDocument();
-  });
-
-  it("displays error state when the query fails", () => {
-    useAuthStore.setState({ apiKey: "existing-key" });
-
-    vi.mocked(trpc.user.info.useQuery).mockReturnValue({
-      isLoading: false,
-      isError: true,
-      error: { message: "Invalid API Key provided" },
-      data: undefined,
-    } as unknown as ReturnType<typeof trpc.user.info.useQuery>);
-
-    render(<App />);
-    expect(
-      screen.getByText("Error: Invalid API Key provided"),
-    ).toBeInTheDocument();
-  });
-
-  it("displays profile data when connection is successful", () => {
-    useAuthStore.setState({ apiKey: "existing-key" });
-
-    const mockUserData = { username: "bryxli" };
-    vi.mocked(trpc.user.info.useQuery).mockReturnValue({
-      isLoading: false,
-      isError: false,
-      data: mockUserData,
-    } as unknown as ReturnType<typeof trpc.user.info.useQuery>);
-
-    render(<App />);
-
-    expect(screen.getByText("Connected Successfully")).toBeInTheDocument();
-    expect(screen.getByText(new RegExp("bryxli"))).toBeInTheDocument();
+    expect(screen.getByTestId("header")).toBeInTheDocument();
+    expect(screen.getByTestId("user-profile")).toBeInTheDocument();
+    expect(screen.getByTestId("workout-history")).toBeInTheDocument();
   });
 });
