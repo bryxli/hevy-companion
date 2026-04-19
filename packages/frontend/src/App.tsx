@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "./trpc";
 import { useAuthStore } from "./store/useAuthStore";
+import { WorkoutHistory } from "./components/WorkoutHistory";
 
 function App() {
   const { apiKey, setApiKey, clearApiKey } = useAuthStore();
@@ -65,33 +66,42 @@ function App() {
         </button>
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">
-        Hevy Profile Info
-      </h3>
-
       {userQuery.isLoading && (
-        <p className="text-gray-500 animate-pulse">
-          Fetching profile from Hevy...
-        </p>
+        <div className="mb-12 bg-white border border-gray-200 rounded-xl p-8 shadow-sm flex items-center justify-center">
+          <p className="text-gray-500 animate-pulse font-medium">
+            Fetching profile from Hevy...
+          </p>
+        </div>
       )}
 
       {userQuery.isError && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-          Error: {userQuery.error.message}
+        <div className="mb-12 bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+          <p className="font-bold">Failed to load profile</p>
+          <p className="text-sm">{userQuery.error.message}</p>
         </div>
       )}
 
       {userQuery.data && (
-        <div className="bg-gray-100 p-4 md:p-6 rounded-lg border border-gray-200 shadow-inner overflow-x-auto">
-          <p className="text-green-600 font-bold mb-2 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500" />
-            <span>Connected Successfully</span>
-          </p>
-          <pre className="text-sm text-gray-700 m-0">
-            {JSON.stringify(userQuery.data, null, 2)}
-          </pre>
-        </div>
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Hevy Profile Info
+          </h2>
+
+          <div className="bg-gray-100 p-4 md:p-6 rounded-lg border border-gray-200 shadow-inner overflow-x-auto">
+            <p className="text-green-600 font-bold mb-2 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              <span>Connected Successfully</span>
+            </p>
+            <pre className="text-sm text-gray-700 m-0">
+              {JSON.stringify(userQuery.data, null, 2)}
+            </pre>
+          </div>
+        </section>
       )}
+
+      <section>
+        <WorkoutHistory />
+      </section>
     </div>
   );
 }
