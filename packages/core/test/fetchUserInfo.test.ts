@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { fetchUserInfo } from "../src/hevy";
 import { ZodError } from "zod";
 
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 describe("fetchUserInfo", () => {
   beforeEach(() => {
@@ -18,14 +18,14 @@ describe("fetchUserInfo", () => {
       },
     };
 
-    (global.fetch as Mock).mockResolvedValueOnce({
+    (globalThis.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockHevyResponse,
     });
 
     const result = await fetchUserInfo("valid-api-key");
 
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       "https://api.hevyapp.com/v1/user/info",
       expect.objectContaining({
         headers: { "api-key": "valid-api-key" },
@@ -35,7 +35,7 @@ describe("fetchUserInfo", () => {
   });
 
   it("should throw an error if the HTTP response is not ok (e.g., 401)", async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
+    (globalThis.fetch as Mock).mockResolvedValueOnce({
       ok: false,
       status: 401,
       statusText: "Unauthorized",
@@ -53,7 +53,7 @@ describe("fetchUserInfo", () => {
       },
     };
 
-    (global.fetch as Mock).mockResolvedValueOnce({
+    (globalThis.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => badHevyResponse,
     });
