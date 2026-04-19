@@ -14,7 +14,7 @@ export function WorkoutHistory() {
     return (
       <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm flex items-center justify-center">
         <p className="text-gray-500 animate-pulse font-medium">
-          Loading heavy lifts...
+          Loading workouts...
         </p>
       </div>
     );
